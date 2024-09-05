@@ -13,5 +13,6 @@ class Grid {
         std::vector<std::vector<unsigned int>> grid;
 
         void initializeGrid();
+        void spawnNewTile();
         void moveTiles(enum direction moveDirection);
 };

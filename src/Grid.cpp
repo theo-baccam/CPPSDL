@@ -26,20 +26,24 @@ void Grid::initializeGrid() {
         }
     }
 
+    spawnNewTile();
+    spawnNewTile();
+}
+
+void Grid::spawnNewTile() {
     srand(time(0));
 
-    for (int i = 0; i < 2; i++) {
-        int randomX;
-        int randomY;
+    int randomX;
+    int randomY;
 
-        do {
-            randomY = rand() % 4;
-            randomX = rand() % 4;
-        } while (this->grid[randomY][randomX] != 0);
+    do {
+        randomY = rand() % 4;
+        randomX = rand() % 4;
+    } while (this->grid[randomY][randomX] != 0);
 
-        int randomValue = (rand() % 2 + 1) * 2;
+    int randomValue = (rand() % 2 + 1) * 2;
 
-        this->grid[randomY][randomX] = randomValue;
-    }
+    this->grid[randomY][randomX] = randomValue;
 }
+
 void Grid::moveTiles(enum direction moveDirection) {}
