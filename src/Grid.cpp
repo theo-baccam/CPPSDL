@@ -10,8 +10,6 @@
 
 #include "Grid.hpp"
 
-#include <iostream>
-
 
 Grid::Grid() {
     this->grid = {
@@ -54,64 +52,100 @@ void Grid::spawnNewTile() {
     this->grid[randomY][randomX] = randomValue;
 }
 
+struct moveConfiguration Grid::getLeftMoveConfiguration(int &y, int &x) {
+    struct moveConfiguration cfg = {
+        MIN_INDEX,
+
+        &y,
+        [&y]() {return y < GRID_SIZE;},
+        [&y]() {y++;},
+
+        &x,
+        [&x]() {return x < GRID_SIZE;},
+        [&x]() {x++;},
+
+        0,
+        -1
+    };
+
+    return cfg;
+}
+
+struct moveConfiguration Grid::getRightMoveConfiguration(int &y, int &x) {
+    struct moveConfiguration cfg = {
+        MAX_INDEX,
+
+        &y,
+        [&y]() {return y >= MIN_INDEX;},
+        [&y]() {y--;},
+
+        &x,
+        [&x]() {return x >= MIN_INDEX;},
+        [&x]() {x--;},
+
+        0,
+        1
+    };
+
+    return cfg;
+}
+
+struct moveConfiguration Grid::getDownMoveConfiguration(int &y, int &x) {
+    struct moveConfiguration cfg = {
+        MIN_INDEX,
+
+        &x,
+        [&x]() {return x < GRID_SIZE;},
+        [&x]() {x++;},
+
+        &y,
+        [&y]() {return y < GRID_SIZE;},
+        [&y]() {y++;},
+
+        1,
+        0
+    };
+
+    return cfg;
+}
+
+struct moveConfiguration Grid::getUpMoveConfiguration(int &y, int &x) {
+    struct moveConfiguration cfg = {
+        MAX_INDEX,
+
+        &x,
+        [&x]() {return x >= MIN_INDEX;},
+        [&x]() {x--;},
+
+        &y,
+        [&y]() {return y >= MIN_INDEX;},
+        [&y]() {y--;},
+
+        -1,
+        0
+    };
+
+    return cfg;
+}
+
 void Grid::moveTiles(enum direction moveDirection) {
     int y;
     int x;
-    int loopStart;
-    int* loop1;
-    int* loop2;
 
-    std::function<bool()> loop1Condition;
-    std::function<bool()> loop2Condition;
-    std::function<void()> loop1Increment;
-    std::function<void()> loop2Increment;
-    int yAhead;
-    int xAhead;
+    struct moveConfiguration cfg;
 
     switch (moveDirection) {
         case LEFT:
-            loop1Condition = [&]() {return y < GRID_SIZE;};
-            loop2Condition = [&]() {return x < GRID_SIZE;};
-            loop1Increment = [&]() {y++;};
-            loop2Increment = [&]() {x++;};
-            yAhead = 0;
-            xAhead = -1;
-            loop1 = &y;
-            loop2 = &x;
-            loopStart = MIN_INDEX;
+            cfg = this->getLeftMoveConfiguration(y, x);
             break;
         case RIGHT:
-            loop1Condition = [&]() {return y >= MIN_INDEX;};
-            loop2Condition = [&]() {return x >= MIN_INDEX;};
-            loop1Increment = [&]() {y--;};
-            loop2Increment = [&]() {x--;};
-            yAhead = 0;
-            xAhead = 1;
-            loop1 = &y;
-            loop2 = &x;
-            loopStart = MAX_INDEX;
+            cfg = this->getRightMoveConfiguration(y, x);
             break;
         case DOWN:
-            loop1Condition = [&]() {return x < GRID_SIZE;};
-            loop2Condition = [&]() {return y < GRID_SIZE;};
-            loop1Increment = [&]() {x++;};
-            loop2Increment = [&]() {y++;};
-            yAhead = 1;
-            xAhead = 0;
-            loop1 = &x;
-            loop2 = &y;
-            loopStart = MIN_INDEX;
+            cfg = this->getDownMoveConfiguration(y, x);
             break;
         case UP:
-            loop1Condition = [&]() {return x >= MIN_INDEX;};
-            loop2Condition = [&]() {return y >= MIN_INDEX;};
-            loop1Increment = [&]() {x--;};
-            loop2Increment = [&]() {y--;};
-            yAhead = -1;
-            xAhead = 0;
-            loop1 = &x;
-            loop2 = &y;
-            loopStart = MAX_INDEX;
+            cfg = this->getUpMoveConfiguration(y, x);
             break;
     }
 
@@ -119,28 +153,28 @@ void Grid::moveTiles(enum direction moveDirection) {
     do {
         change = false;
 
-        *(loop1) = loopStart;
-        for (;loop1Condition(); loop1Increment()) {
-            *(loop2) = loopStart;
-            for (;loop2Condition(); loop2Increment()) {
+        *(cfg.loop1) = cfg.loopStart;
+        for (;cfg.loop1Condition(); cfg.loop1Increment()) {
+            *(cfg.loop2) = cfg.loopStart;
+            for (;cfg.loop2Condition(); cfg.loop2Increment()) {
                 // blank square
                 if (grid[y][x] == 0) {
                     continue;
                 }
 
                 // wall collision
-                if (y + yAhead < MIN_INDEX   
-                    || y + yAhead > MAX_INDEX
-                    || x + xAhead < MIN_INDEX
-                    || x + xAhead > MAX_INDEX
+                if (y + cfg.yAhead < MIN_INDEX   
+                    || y + cfg.yAhead > MAX_INDEX
+                    || x + cfg.xAhead < MIN_INDEX
+                    || x + cfg.xAhead > MAX_INDEX
                 ) {
                     continue;
                 }
 
                 // No fusion collision
                 if (
-                    grid[y + yAhead][x + xAhead] != 0
-                    && grid[y + yAhead][x + xAhead] != grid[y][x]
+                    grid[y + cfg.yAhead][x + cfg.xAhead] != 0
+                    && grid[y + cfg.yAhead][x + cfg.xAhead] != grid[y][x]
                 ) {
                     continue;
                 }
@@ -148,13 +182,13 @@ void Grid::moveTiles(enum direction moveDirection) {
                 change = true;
 
                 // fusion
-                if (grid[y + yAhead][x + xAhead] == grid[y][x]) {
-                    grid[y + yAhead][x + xAhead] *= 2;
+                if (grid[y + cfg.yAhead][x + cfg.xAhead] == grid[y][x]) {
+                    grid[y + cfg.yAhead][x + cfg.xAhead] *= 2;
                     grid[y][x] = 0;
                     continue;
                 }
 
-                grid[y + yAhead][x + xAhead] = grid[y][x];
+                grid[y + cfg.yAhead][x + cfg.xAhead] = grid[y][x];
                 grid[y][x] = 0;
             }
         }

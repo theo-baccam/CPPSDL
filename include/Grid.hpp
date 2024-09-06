@@ -1,9 +1,24 @@
 #pragma once
 
 #include <vector>
+#include <functional>
 
 
 enum direction {LEFT, RIGHT, UP, DOWN};
+struct moveConfiguration {
+    int loopStart;
+
+    int* loop1;
+    std::function<bool()> loop1Condition;
+    std::function<void()> loop1Increment;
+
+    int* loop2;
+    std::function<bool()> loop2Condition;
+    std::function<void()> loop2Increment;
+
+    int yAhead;
+    int xAhead;
+};
 
 class Grid {
     public:
@@ -14,5 +29,11 @@ class Grid {
 
         void initializeGrid();
         void spawnNewTile();
+
+        struct moveConfiguration getLeftMoveConfiguration(int &y, int &x);
+        struct moveConfiguration getRightMoveConfiguration(int &y, int &x);
+        struct moveConfiguration getDownMoveConfiguration(int &y, int &x);
+        struct moveConfiguration getUpMoveConfiguration(int &y, int &x);
+
         void moveTiles(enum direction moveDirection);
 };
