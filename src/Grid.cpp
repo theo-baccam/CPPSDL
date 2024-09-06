@@ -10,7 +10,6 @@
 
 #include "Grid.hpp"
 
-
 Grid::Grid() {
     this->grid = {
         {0, 0, 0, 0},
@@ -134,18 +133,25 @@ void Grid::moveTiles(enum direction moveDirection) {
 
     struct moveConfiguration cfg;
 
+    std::vector<std::vector<bool>> fusedSquares = {
+        {0, 0, 0, 0},
+        {0, 0, 0, 0},
+        {0, 0, 0, 0},
+        {0, 0, 0, 0}
+    };
+
     switch (moveDirection) {
         case LEFT:
-            cfg = this->getLeftMoveConfiguration(y, x);
+            cfg = getLeftMoveConfiguration(y, x);
             break;
         case RIGHT:
-            cfg = this->getRightMoveConfiguration(y, x);
+            cfg = getRightMoveConfiguration(y, x);
             break;
         case DOWN:
-            cfg = this->getDownMoveConfiguration(y, x);
+            cfg = getDownMoveConfiguration(y, x);
             break;
         case UP:
-            cfg = this->getUpMoveConfiguration(y, x);
+            cfg = getUpMoveConfiguration(y, x);
             break;
     }
 
@@ -171,6 +177,18 @@ void Grid::moveTiles(enum direction moveDirection) {
                     continue;
                 }
 
+                // skip if fused
+                if (fusedSquares[y][x]) {
+                    continue;
+                }
+
+                // if colliding into fused square
+                if (
+                    fusedSquares[y + cfg.yAhead][x + cfg.xAhead]
+                ) {
+                    continue;
+                }
+
                 // No fusion collision
                 if (
                     grid[y + cfg.yAhead][x + cfg.xAhead] != 0
@@ -185,6 +203,7 @@ void Grid::moveTiles(enum direction moveDirection) {
                 if (grid[y + cfg.yAhead][x + cfg.xAhead] == grid[y][x]) {
                     grid[y + cfg.yAhead][x + cfg.xAhead] *= 2;
                     grid[y][x] = 0;
+                    fusedSquares[y + cfg.yAhead][x + cfg.xAhead] = 1;
                     continue;
                 }
 
