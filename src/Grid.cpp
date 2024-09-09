@@ -8,6 +8,7 @@
 #include <ctime>
 #include <functional>
 
+#include "keys.hpp"
 #include "Grid.hpp"
 
 Grid::Grid() {
@@ -127,7 +128,7 @@ struct moveConfiguration Grid::getUpMoveConfiguration(int &y, int &x) {
     return cfg;
 }
 
-void Grid::moveTiles(enum direction moveDirection) {
+void Grid::moveTiles(enum keys moveDirection) {
     int y;
     int x;
 

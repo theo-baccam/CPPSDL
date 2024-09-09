@@ -3,8 +3,9 @@
 #include <vector>
 #include <functional>
 
+#include "keys.hpp"
 
-enum direction {LEFT, RIGHT, UP, DOWN};
+
 struct moveConfiguration {
     int loopStart;
 
@@ -35,5 +36,5 @@ class Grid {
         struct moveConfiguration getDownMoveConfiguration(int &y, int &x);
         struct moveConfiguration getUpMoveConfiguration(int &y, int &x);
 
-        void moveTiles(enum direction moveDirection);
+        void moveTiles(enum keys moveDirection);
 };
