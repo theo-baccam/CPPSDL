@@ -54,3 +54,22 @@ void flip_diagonally(Grid& grid)
     std::swap(grid[3][1], grid[1][3]);
     std::swap(grid[3][2], grid[2][3]);
 }
+
+void squash_column(std::array<int, 4>& col)
+{
+    for (int dest = 3; dest >= 0; --dest) {
+        int src = dest - 1;
+        while (src >= 0 && col[src] == 0)
+            --src;
+        if (src < 0)
+            break;
+        if (col[dest] == col[src]) {
+            col[dest] = col[dest] * 2;
+            col[src] = 0;
+        }
+        if (col[dest] == 0) {
+            std::swap(col[dest], col[src]);
+            ++dest;
+        }
+    }
+}
