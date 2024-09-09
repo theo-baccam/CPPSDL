@@ -11,11 +11,13 @@ Controller::~Controller() {}
 
 void Controller::run() {
     view->initializeWindow();
+    grid.initializeGrid();
 
     while (view->isWindowOpen()) {
         enum keys pressedKey = view->getPressedKey();
         if (pressedKey != NONE) {
             grid.moveTiles(pressedKey);
+            grid.spawnNewTile();
         }
         view->draw(grid);
         if (view->isCloseWindowPressed()) {

@@ -9,10 +9,10 @@ class View {
         View();
         ~View();
 
-        virtual void initializeWindow();
-        virtual bool isWindowOpen();
-        virtual enum keys getPressedKey();
-        virtual void draw(Grid grid);
-        virtual bool isCloseWindowPressed();
-        virtual void closeWindow();
+        virtual void initializeWindow() = 0;
+        virtual bool isWindowOpen() = 0;
+        virtual enum keys getPressedKey() = 0;
+        virtual void draw(Grid grid) = 0;
+        virtual bool isCloseWindowPressed() = 0;
+        virtual void closeWindow() = 0;
 };
