@@ -1,3 +1,3 @@
 #pragma once
 
-enum keys {LEFT, RIGHT, UP, DOWN};
+enum keys {NONE, LEFT, RIGHT, UP, DOWN};
