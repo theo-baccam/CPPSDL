@@ -73,3 +73,20 @@ void squash_column(std::array<int, 4>& col)
         }
     }
 }
+
+void squash(Grid& grid, int key)
+{
+    if (key == cg::KeyLeft || key == cg::KeyRight)
+        flip_diagonally(grid);
+    if (key == cg::KeyUp || key == cg::KeyLeft)
+        flip_vertically(grid);
+
+    for (int x = 0; x < 4; ++x)
+        squash_column(grid[x]);
+
+    if (key == cg::KeyUp || key == cg::KeyLeft)
+        flip_vertically(grid);
+    if (key == cg::KeyLeft || key == cg::KeyRight)
+        flip_diagonally(grid);
+}
+
