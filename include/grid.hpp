@@ -15,3 +15,15 @@ Grid new_grid()
                grid[x][y] = 0;
     return grid;
 }
+
+void new_number(Grid grid)
+{
+    while (true) {
+        int x = cg::random_int(3);
+        int y = cg::random_int(3);
+        if (grid[x][y] == 0) {
+            grid[x][y] = 2;
+            return;
+        }
+    }
+}
