@@ -44,3 +44,13 @@ void flip_vertically(Grid& grid)
         std::swap(grid[x][1], grid[x][2]);
     }
 }
+
+void flip_diagonally(Grid& grid)
+{
+    std::swap(grid[1][0], grid[0][1]);
+    std::swap(grid[2][0], grid[0][2]);
+    std::swap(grid[3][0], grid[0][3]);
+    std::swap(grid[2][1], grid[1][2]);
+    std::swap(grid[3][1], grid[1][3]);
+    std::swap(grid[3][2], grid[2][3]);
+}
