@@ -36,3 +36,11 @@ bool is_full(Grid grid)
                 return false;
     return true;
 }
+
+void flip_vertically(Grid& grid)
+{
+    for (int x = 0; x < 4; ++x) {
+        std::swap(grid[x][0], grid[x][3]);
+        std::swap(grid[x][1], grid[x][2]);
+    }
+}
