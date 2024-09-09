@@ -27,3 +27,12 @@ void new_number(Grid grid)
         }
     }
 }
+
+bool is_full(Grid grid)
+{
+    for (int x = 0; x < 4; x++)
+        for (int y = 0; y < 4; y++)
+            if (grid[x][y] == 0)
+                return false;
+    return true;
+}
