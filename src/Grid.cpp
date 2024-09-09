@@ -128,7 +128,7 @@ struct moveConfiguration Grid::getUpMoveConfiguration(int &y, int &x) {
     return cfg;
 }
 
-void Grid::moveTiles(enum keys moveDirection) {
+bool Grid::moveTiles(enum keys moveDirection) {
     int y;
     int x;
 
@@ -156,6 +156,7 @@ void Grid::moveTiles(enum keys moveDirection) {
             break;
     }
 
+    bool overallChange = false;
     bool change;
     do {
         change = false;
@@ -205,12 +206,16 @@ void Grid::moveTiles(enum keys moveDirection) {
                     grid[y + cfg.yAhead][x + cfg.xAhead] *= 2;
                     grid[y][x] = 0;
                     fusedSquares[y + cfg.yAhead][x + cfg.xAhead] = 1;
+                    overallChange = true;
                     continue;
                 }
 
                 grid[y + cfg.yAhead][x + cfg.xAhead] = grid[y][x];
                 grid[y][x] = 0;
+                overallChange = true;
             }
         }
     } while (change);
+
+    return overallChange;
 }

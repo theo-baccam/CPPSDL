@@ -16,8 +16,9 @@ void Controller::run() {
     while (view->isWindowOpen()) {
         enum keys pressedKey = view->getPressedKey();
         if (pressedKey != NONE) {
-            grid.moveTiles(pressedKey);
-            grid.spawnNewTile();
+            if (grid.moveTiles(pressedKey)) {
+                grid.spawnNewTile();
+            }
         }
         view->draw(grid);
         if (view->isCloseWindowPressed()) {

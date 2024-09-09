@@ -36,5 +36,5 @@ class Grid {
         struct moveConfiguration getDownMoveConfiguration(int &y, int &x);
         struct moveConfiguration getUpMoveConfiguration(int &y, int &x);
 
-        void moveTiles(enum keys moveDirection);
+        bool moveTiles(enum keys moveDirection);
 };
